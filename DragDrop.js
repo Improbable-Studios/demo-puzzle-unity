@@ -1,48 +1,45 @@
 ﻿#pragma strict
 
-private var ray : Ray;
-private var hit : RaycastHit;
+// Based on DragObject by Eric Haines < http://wiki.unity3d.com/index.php?title=DragObject >
+// Adjusted to 2D environment by Meepu
+
+// For London Is a Maze demo puzzle
+
+// Drag and drop road pieces on the map
+
+// Use on objects with
+// isKinematic = false
+
+private var myRigidbody : Rigidbody2D;
+private var myTransform : Transform;
+private var canMove = false;
+
+var cam : Camera;
 
 function Start ()
 {
-    Random.seed = Time.time;
+	myRigidbody = rigidbody2D;
+	myTransform = transform;
+	cam = Camera.main;
 }
 
-function Update () {
+function FixedUpdate ()
+{
+	if (!canMove) return;
 	
-/*	if (Input.GetMouseButton(0))
-	{
-		ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		if (Physics.Raycast(ray, hit))
-		{
-			Debug.Log("Working?");
-			transform.position.x = hit.point.x;
-			transform.position.y = hit.point.y;
-		}
-		else
-		{
-			Debug.Log("Not working");
-		}
-	}
-*/	
+	var mousePos = Input.mousePosition;
+	var move = cam.ScreenToWorldPoint(Vector3(mousePos.x, mousePos.y, 1)) - myTransform.position;
+ 
+	myRigidbody.transform.Translate(move);
+	
 }
 
 function OnMouseDown ()
 {
-//    var r : float = Random.Range(0f,1f);
-//    var g : float = Random.Range(0f,1f);
-//    var b : float = Random.Range(0f,1f);
-//    var randomColour : Color = new Color(r,g,b,1f);
-    
-//    renderer.material.color = randomColour;
+	canMove = true;
 }
 
-function OnMouseDrag () {
-//		renderer.material.color -= Color.white * Time.deltaTime;
-
+function OnMouseUp ()
+{
+	canMove = false;
 }
-	
-function OnMouseUp () {
-//		Debug.Log("Drag ended!");
-}	
-	
